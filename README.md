@@ -3,8 +3,8 @@ Modifications to the Universal Solder EverSet ES100-MOD Application Development 
 # License
 This repository contains source code from the Universal Solder web site that contains a mix of licenses.
 # Contact
-John Sloan    
-<mailto:jsloan@diag.com>    
+Chip Overclock    
+<mailto:coverclock@diag.com>    
 Digital Aggregates Corporation   
 <http://www.diag.com>    
 3440 Youngfield Street    
