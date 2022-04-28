@@ -5,10 +5,8 @@ This repository contains source code from the Universal Solder web site that con
 # Contact
 John Sloan    
 Cranequin LLC   
-3440 Youngfield Street    
-Suite 209    
-Wheat Ridge Colorado 80033    
-U.S.A.    
+3440 Youngfield Street, Suite 209    
+Wheat Ridge, Colorado 80033 USA    
 <mailto:jsloan@cranequin.com>    
 <http://www.cranequin.com>    
 # Links
