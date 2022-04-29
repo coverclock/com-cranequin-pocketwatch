@@ -11,8 +11,6 @@
 
 #define POCKETWATCH (!0)
 
-boolean pocketwatch_is_leapyear(const Time * tp);
-
 char pocketwatch_get_timezone(int8_t offset);
 
 void pocketwatch_to_localtime(Time * tp, int8_t offset);

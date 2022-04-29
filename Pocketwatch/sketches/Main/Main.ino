@@ -39,11 +39,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 
 // include the library code:
-#include <Pocketwatch.h>
 #include <LiquidCrystal.h>
 #include <DS3231.h>
 #include <ES100.h>
 #include <Wire.h>
+#include <Pocketwatch.h>
 
 
 #define lcdRS 4
