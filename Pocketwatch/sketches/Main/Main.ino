@@ -37,13 +37,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define POCKETWATCH (!0)
 
 // include the library code:
 #include <LiquidCrystal.h>
 #include <DS3231.h>
 #include <ES100.h>
 #include <Wire.h>
+#ifdef POCKETWATCH
 #include <Pocketwatch.h>
+#endif
 
 
 #define lcdRS 4

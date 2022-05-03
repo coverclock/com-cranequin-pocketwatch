@@ -1,62 +1,63 @@
 /* vi: set ts=4 expandtab shiftwidth=4: */
-/**
- ** Copyright 2022 Cranequin LLC, Colorado, USA.
- ** Licensed under the terms of the GNU LGPL version 2.1.
- **/
+/*
+ * Pocketwatch Implementation
+ * Copyright 2022 Cranequin LLC, Colorado, USA.
+ * <http://cranequin.com>
+ * Licensed under the terms of the GNU LGPL version 2.1.
+ * This is an original work of John Sloan.
+ * <mailto:jsloan@diag.com>
+ */
 
-static uint8_t DAYS[] = {
-    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
-/*    1   2   3   4   5   6   7   8   9  10  11  12   */
-/*  Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec   */
-};
+#include "Pocketwatch.h"
 
-void pocketwatch_to_localtime(Time * tp, int8_t offset, uint8_t dst)
+uint8_t Pocketwatch::getDays()
 {
-    int16_t yy;
-    int8_t mm;
-    int8_t dd;
-    int8_t hh;
-    int8_t ll;
+    static const uint8_t DAYS[] = {
+        31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+    /*   1   2   3   4   5   6   7   8   9  10  11  12   */
+    /*  Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec  */
+    };
+    uint8_t days;
 
-    offset %= 13;
-    offset += dst;
+    days = DAYS[(this->mon - 1) % 12];
+    if ((this->mon == 2) && ((this->year % 4) == 0) && ((this->year % 400) != 0)) { days += 1; }
 
-    yy = tp->year;
-    mm = tp->mon;
-    dd = tp->date;
-    hh = tp->hour;
+    return days;
+}
+
+void Pocketwatch::toLocalTime(int8_t offset, boolean dst)
+{
+    offset %= 13; /* -12..12 */
+    offset += dst ? 1 : 0; /* -12..13 */
+    this->hour += offset;
 
     if (offset < 0) {
-        hh += offset;
-        if (hh < 0) {
-            dd -= 1;
-            if (dd <= 0) {
-                mm -= 1;
-                if (mm <= 0) {
-                    yy -= 1;
-                    mm = 12;
+        if (this->hour < 0) {
+            this->date -= 1;
+            if (this->date <= 0) {
+                this->mon -= 1;
+                if (this->mon <= 0) {
+                    this->year -= 1;
+                    this->mon = 12;
                 }
-                ll = DAYS[mm - 1] + (((mm == 2) && ((yy % 4) == 0) && ((yy % 400) != 0)) ? 1 : 0);
-                dd = ll;
+                this->date = this->getDays();
             }
-            hh = 23;
-            tp->dow = ((tp->dow + 7) % 7) + 1;
+            this->hour = 23;
+            this->dow = ((this->dow + 5) % 7) + 1; /* 1..7 */
         }
     } else if (offset > 0) {
-        hh += offset;
-        if (hh > 23) {
-            dd += 1;
-            ll = DAYS[mm - 1] + (((mm == 2) && ((yy % 4) == 0) && ((yy % 400) != 0)) ? 1 : 0);
-            if (dd > ll) {
-                mm += 1;
-                if (mm > 12) {
-                    yy += 1;
-                    mm = 1;
+        if (this->hour > 23) {
+            this->date += 1;
+            if (this->date > this->getDays()) {
+                this->mon += 1;
+                if (this->mon > 12) {
+                    this->year += 1;
+                    this->mon = 1;
                 }
-                dd = 1;
+                this->date = 1;
             }
-            hh = 0
-            tp->dow = (tp->dow % 7) + 1;
+            this->hour = 0
+            this->dow = (this->dow % 7) + 1; /* 1..7 */
         }
     } else {
         /* Do nothing. */
@@ -64,12 +65,19 @@ void pocketwatch_to_localtime(Time * tp, int8_t offset, uint8_t dst)
 
 }
 
-static char ZONE[] = {
-    'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q', 'P', 'O', 'N', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M',
-/*  -12  -11  -10   -9   -8   -7   -6   -5   -4   -3   -2   -1   0    +1   +2   +3   +4   +5   +6   +7   +8   +9  +10  +11  +12   */
-};
-
-char pocketwatch_get_timezone(int8_t offset)
+char Pocketwatch::getTimeZone(int8_t offset, boolean dst)
 {
-    return ZONE[(offset + 12) % (sizeof(ZONE) / sizeof(ZONE[0]))];
+    static const char ZONE[] = {
+        'Y', 'X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q', 'P', 'O', 'N', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M',
+    /*  [0]  [1]  [2]  [3]  [4]  [5]  [6]  [7]  [8]  [9]  [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24]  */
+    /*  -12  -11  -10   -9   -8   -7   -6   -5   -4   -3   -2   -1   0    +1   +2   +3   +4   +5   +6   +7   +8   +9  +10  +11  +12   */
+    };
+    char zone;
+
+    offset %= 13; /* -12..12 */
+    offset += 12; /*  0..24  */
+    zone = ZONE[offset]; /* 'Y'..'M' */
+    if (dst) { zone += ' '; } /* 'y'..'m' */
+
+    return zone;
 }

@@ -1,18 +1,47 @@
-/* vi: set ts=4 expandtab shiftwidth=4: */
 #ifndef _H_COM_CRANEQUIN_POCKETWATCH_
 #define _H_COM_CRANEQUIN_POCKETWATCH_
 
-/**
- ** Copyright 2022 Cranequin LLC, Colorado, USA.
- ** Licensed under the terms of the GNU LGPL version 2.1.
- **/
+/*
+ * Pocketwatch Declaration
+ * Copyright 2022 Cranequin LLC, Colorado, USA.
+ * <http://cranequin.com>
+ * Licensed under the terms of the GNU LGPL version 2.1.
+ * This is an original work of John Sloan.
+ * <mailto:jsloan@diag.com>
+ */
 
-#include <DS3231.h>
+/*
+ * Define a mechanism to adjust a time in UTC to a local time.
+ */
+class Pocketwatch {
 
-#define POCKETWATCH (!0)
+public:
 
-char pocketwatch_get_timezone(int8_t offset);
+    int8_t hour; /* 0..23 */
+    int8_t date; /* 1..31 */
+    int8_t mon;  /* 1..12 */
+    int8_t year;
+    int8_t dow;  /* 1..7 */
 
-void pocketwatch_to_localtime(Time * tp, int8_t offset);
+    /*
+     * Given the year and month, return the number of days in the month.
+     */
+    int8_t getDays();
+
+    /*
+     * Given a Pocketwatch object in UTC, a signed time zone offset in hours,
+     * and a flag indicating whether Daylight Saving Time is active, return the
+     * object adjusted to the local time.
+     */
+    void toLocalTime(int8_t offset, boolean dst);
+
+    /*
+     * Given a signed time zone offset in hours, return a time zone name using
+     * the single letter NATO nomenclature, where 'Z' for Zulu is UTC which has
+     * an offset of zero.
+     */
+    static char getTimeZone(int8_t offset, boolean dst);
+
+};
 
 #endif
