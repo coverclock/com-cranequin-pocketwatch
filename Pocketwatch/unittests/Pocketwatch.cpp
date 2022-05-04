@@ -29,7 +29,7 @@ static int test1(int16_t y0, int8_t m0, int8_t n1)
 
   nx = ll.getDays();
 
-  fprintf(stderr, "test1: INP %04d-%02d OUT %d EXP %d\n",
+  fprintf(stderr, "test1: INP %04d-%02d OUT %2d EXP %2d\n",
     y0, m0,
     nx,
     n1);
@@ -43,7 +43,7 @@ static int test2(int8_t offset, bool dst, char z1)
 
   zx = Localtime::getTimeZone(offset, dst);
 
-  fprintf(stderr, "test2: INP %d %d OUT '%c' EXP '%c'\n",
+  fprintf(stderr, "test2: INP %3d %d OUT '%c' EXP '%c'\n",
     offset, dst,
     zx,
     z1);
