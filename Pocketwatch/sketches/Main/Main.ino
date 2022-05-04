@@ -38,8 +38,8 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 
 #define POCKETWATCH
-#define VERBOSE
-#define CONTINUOUS
+//#define VERBOSE
+//#define CONTINUOUS
 
 // include the library code:
 #include <LiquidCrystal.h>
@@ -110,14 +110,14 @@ char * getISODateStr() {
   t=rtc.getTime();
 
 #ifdef POCKETWATCH
-  Serial.println(offset, DEC);
-  Serial.println(dst, DEC);
   l.hour = t.hour;
   l.mon = t.mon;
   l.date = t.date;
   l.year = t.year;
   l.dow = t.dow;
 #ifdef VERBOSE
+  Serial.println(offset, DEC);
+  Serial.println(dst, DEC);
   Serial.print(l.year, DEC);
   Serial.print('-');
   Serial.print(l.mon, DEC);
