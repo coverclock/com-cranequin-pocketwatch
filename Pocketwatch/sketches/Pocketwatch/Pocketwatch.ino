@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 
 #define POCKETWATCH
-//#define VERBOSE
+#define VERBOSE
 //#define CONTINUOUS
 
 // include the library code:
@@ -48,6 +48,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <Wire.h>
 #ifdef POCKETWATCH
 #include <Pocketwatch.h>
+#define S1 3
+#define S2 6
+#define S3 7
 #endif
 
 
@@ -86,9 +89,12 @@ ES100NextDst  nextDst;
 
 #ifdef POCKETWATCH
 Localtime l;
-int8_t offset = -7; /* MST */
-boolean dstinuse = true;
-boolean dstineffect = false;
+int8_t zoneOffset = -7; /* MST */
+boolean dstInUse = true; /* MDT */
+boolean dstInEffect = false; /* Unknown until we get disciplined to WWVB. */
+Debouncer s1;
+Debouncer s2;
+Debouncer s3;
 #endif
 
 void atomic() {
@@ -101,8 +107,8 @@ void atomic() {
 char * getISODateStr() {
 #ifdef POCKETWATCH
   static char result[21];
-  boolean dst = dstinuse && dstineffect;
-  char zone = Localtime::getTimeZone(offset, dst);
+  boolean dst = dstInUse && dstInEffect;
+  char zone = Localtime::getTimeZone(zoneOffset, dst);
 #else
   static char result[19];
 #endif
@@ -116,7 +122,7 @@ char * getISODateStr() {
   l.year = t.year;
   l.dow = t.dow;
 #ifdef VERBOSE
-  Serial.println(offset, DEC);
+  Serial.println(zoneOffset, DEC);
   Serial.println(dst, DEC);
   Serial.print(l.year, DEC);
   Serial.print('-');
@@ -128,7 +134,7 @@ char * getISODateStr() {
   Serial.print('Z');
   Serial.println(l.dow, DEC);
 #endif
-  l.toLocalTime(offset, dst);
+  l.toLocalTime(zoneOffset, dst);
 #ifdef VERBOSE
   Serial.print(l.year, DEC);
   Serial.print('-');
@@ -165,6 +171,11 @@ char * getISODateStr() {
   result[9]=char((t.date % 10)+48);
   
   result[10]=84;
+#ifdef POCKETWATCH
+  if (dstInUse) {
+    result[10] += ' ';
+  }
+#endif
 
   if (t.hour<10)
     result[11]=48;
@@ -199,7 +210,7 @@ void displayDST() {
     case B00:
       lcd.print("is Not In Effect");
 #ifdef POCKETWATCH
-      dstineffect = false;
+      dstInEffect = false;
 #endif
       break;
     case B10:
@@ -208,7 +219,7 @@ void displayDST() {
     case B11:
       lcd.print("is In Effect");
 #ifdef POCKETWATCH
-      dstineffect = true;
+      dstInEffect = true;
 #endif
       break;
     case B01:
@@ -432,6 +443,9 @@ void setup() {
   rtc.begin();
 
 #ifdef POCKETWATCH
+  pinMode(S1, INPUT_PULLUP);
+  pinMode(S2, INPUT_PULLUP);
+  pinMode(S3, INPUT_PULLUP);
 #ifdef CONTINUOUS
   continous = true;
 #endif
@@ -502,14 +516,40 @@ void loop() {
     }
     lastinterruptCnt = interruptCnt;
   }
+
+#ifdef POCKETWATCH
+    if ((lastMillis + 10) < millis()) {
+      s1.debounce(digitalRead(S1));
+      if (s1.edge() == Debouncer::IS_RISING) {
+#ifdef VERBOSE
+        Serial.println("S1");
+#endif
+        zoneOffset += 1;
+      }
+      s2.debounce(digitalRead(S2));
+      if (s2.edge() == Debouncer::IS_RISING) {
+#ifdef VERBOSE
+        Serial.println("S2");
+#endif
+        dstInUse = !dstInUse;
+      }
+      s3.debounce(digitalRead(S3));
+      if (s3.edge() == Debouncer::IS_RISING) {
+#ifdef VERBOSE
+        Serial.println("S3");
+#endif
+        zoneOffset -= 1;
+      }
+    }
+#endif
  
   if (lastMillis + 100 < millis()) {
     showlcd();
 
 #ifdef POCKETWATCH
     // Set trigger to start reception at 3AM local time if we are not in continuous mode
-    // (typical of commercial WWVB-disciplined clocks).
-    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 + offset) % 24)) && (t.min == 0)); 
+    // (typical of commercial WWVB-disciplined clocks I have used).
+    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 + (zoneOffset % 13)) % 24)) && (t.min == 0)); 
 #else
     // set the trigger to start reception at midnight (UTC-4) if we are not in continous mode.
     // 4am UTC is midnight for me, adjust to your need

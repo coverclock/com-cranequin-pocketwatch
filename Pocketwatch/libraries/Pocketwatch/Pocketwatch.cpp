@@ -14,7 +14,7 @@
 
 #include "Pocketwatch.h"
 
-Debounce::Debounce(int initial)
+Debouncer::Debouncer(int initial)
 {
   initial = !!initial;
   this->a = initial;
@@ -24,7 +24,7 @@ Debounce::Debounce(int initial)
   this->p = initial;
 }
 
-int Debounce::debounce(int input)
+int Debouncer::debounce(int input)
 {
   this->c = this->b;
   this->b = this->a;
@@ -33,6 +33,27 @@ int Debounce::debounce(int input)
   this->r = (this->p & (this->a | this->b | this->c)) | (this->a & this->b & this->c);
 
   return this->r;
+}
+
+Debouncer::Edge Debouncer::edge() const
+{
+  enum Edge result;
+
+  if (!this->p) {
+    if (!this->r) {
+      result = IS_LOW;
+    } else {
+      result = IS_RISING;
+    }
+  } else {
+    if (!this->r) {
+      result = IS_FALLING;
+    } else {
+      result = IS_HIGH;
+    }
+  }
+
+  return result;
 }
 
 Localtime::Localtime()

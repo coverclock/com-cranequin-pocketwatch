@@ -38,7 +38,7 @@
  * Jack Ganssle, "A Guide to Debouncing", 2008-06,
  * http://www.eng.utah.edu/~cs5780/debouncing.pdf
  */
-class Debounce {
+class Debouncer {
 
 public:
 
@@ -51,12 +51,24 @@ public:
   /*
    * Constructor.
    */
-  Debounce(int initial);
+  Debouncer(int initial = 0);
 
   /*
    * Given a digital input, debounce it and return the output.
    */
   int debounce(int input);
+
+  enum Edge {
+    IS_FALLING,
+    IS_LOW,
+    IS_RISING,
+    IS_HIGH
+  };
+
+  /*
+   * Detect a falling, low, rising, or high edge.
+   */
+  enum Edge edge() const;
 
 };
 
