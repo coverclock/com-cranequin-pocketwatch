@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 
 #define POCKETWATCH
-#define VERBOSE
+//#define VERBOSE
 //#define CONTINUOUS
 
 // include the library code:
@@ -92,9 +92,9 @@ Localtime l;
 int8_t zoneOffset = -7; /* MST */
 boolean dstInUse = true; /* MDT */
 boolean dstInEffect = false; /* Unknown until we get disciplined to WWVB. */
-Debouncer s1;
-Debouncer s2;
-Debouncer s3;
+Debouncer s1(!0);
+Debouncer s2(!0);
+Debouncer s3(!0);
 #endif
 
 void atomic() {
@@ -521,23 +521,17 @@ void loop() {
     if ((lastMillis + 10) < millis()) {
       s1.debounce(digitalRead(S1));
       if (s1.edge() == Debouncer::IS_RISING) {
-#ifdef VERBOSE
         Serial.println("S1");
-#endif
         zoneOffset += 1;
       }
       s2.debounce(digitalRead(S2));
       if (s2.edge() == Debouncer::IS_RISING) {
-#ifdef VERBOSE
         Serial.println("S2");
-#endif
         dstInUse = !dstInUse;
       }
       s3.debounce(digitalRead(S3));
       if (s3.edge() == Debouncer::IS_RISING) {
-#ifdef VERBOSE
         Serial.println("S3");
-#endif
         zoneOffset -= 1;
       }
     }
