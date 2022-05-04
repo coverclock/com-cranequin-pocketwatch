@@ -178,16 +178,16 @@ int main(int argc, char ** argv)
   }
 
   {
-    assert(test3(2000,  1,  1,  0, 6,  -1, false, 1999, 12, 31, 23, 5));
-    assert(test3(1999, 12, 31, 23, 5,   1, false, 2000,  1,  1,  0, 6));
-    assert(test3(2000,  2, 28, 23, 1,   1, false, 2000,  3,  1,  0, 2));
-    assert(test3(2000,  3,  1,  0, 2,  -1, false, 2000,  2, 28, 23, 1));
-    assert(test3(2001,  2, 28, 23, 3,   1, false, 2001,  3,  1,  0, 4));
-    assert(test3(2001,  3,  1,  0, 4,  -1, false, 2001,  2, 28, 23, 3));
-    assert(test3(2004,  2, 28, 23, 6,   1, false, 2004,  2, 29,  0, 7));
-    assert(test3(2004,  2, 29,  0, 7,  -1, false, 2004,  2, 28, 23, 6));
-    assert(test3(2022,  5,  4, 19, 3,  -7, true,  2022,  5,  4, 13, 3));
-    assert(test3(2022,  5,  4, 13, 3,   7, true,  2022,  5,  4, 21, 3));
+    assert(test3(1999, 12, 31, 23, 5,   1, false, 2000,  1,  1,  0, 6)); /* Forward a year. */
+    assert(test3(2000,  1,  1,  0, 6,  -1, false, 1999, 12, 31, 23, 5)); /* Backward a year. */
+    assert(test3(2000,  2, 28, 23, 1,   1, false, 2000,  3,  1,  0, 2)); /* Forward a month. */
+    assert(test3(2000,  3,  1,  0, 2,  -1, false, 2000,  2, 28, 23, 1)); /* Backward a month. */
+    assert(test3(2001,  2, 28, 23, 3,   1, false, 2001,  3,  1,  0, 4)); /* Forward a month. */
+    assert(test3(2001,  3,  1,  0, 4,  -1, false, 2001,  2, 28, 23, 3)); /* Backward a month. */
+    assert(test3(2004,  2, 28, 23, 6,   1, false, 2004,  2, 29,  0, 7)); /* Forward a leap month. */
+    assert(test3(2004,  2, 29,  0, 7,  -1, false, 2004,  2, 28, 23, 6)); /* Backward a leap month. */
+    assert(test3(2022,  5,  4, 19, 3,  -7, true,  2022,  5,  4, 13, 3)); /* Forward hours. */
+    assert(test3(2022,  5,  4, 13, 3,   7, true,  2022,  5,  4, 21, 3)); /* Backward hours. */
   }
 
   return 0;
