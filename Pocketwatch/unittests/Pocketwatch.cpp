@@ -63,8 +63,9 @@ static int test3(int16_t y0, int8_t m0, int8_t d0, int8_t h0, int8_t w0, int8_t 
 
   ll.toLocalTime(offset, dst);
 
-  fprintf(stderr, "test3: INP %04d-%02d-%02dT%02d%c%d OUT %04d-%02d-%02dT%02d%c%d EXP %04d-%02d-%02dT%2d%c%d\n",
+  fprintf(stderr, "test3: INP %04d-%02d-%02dT%02d%c%d %2d %d OUT %04d-%02d-%02dT%02d%c%d EXP %04d-%02d-%02dT%02d%c%d\n",
     y0, m0, d0, h0, ll.getTimeZone(0, false), w0,
+    offset, dst,
     ll.year, ll.mon, ll.date, ll.hour, ll.getTimeZone(offset, dst), ll.dow,
     y1, m1, d1, h1, ll.getTimeZone(offset, dst), w1);
 
@@ -86,7 +87,9 @@ int main(int argc, char ** argv)
     assert(test1(2000, 10, 31));
     assert(test1(2000, 11, 30));
     assert(test1(2000, 12, 31));
+  }
 
+  {
     assert(test1(2001,  1, 31));
     assert(test1(2001,  2, 28));
     assert(test1(2001,  3, 31));
@@ -99,7 +102,9 @@ int main(int argc, char ** argv)
     assert(test1(2001, 10, 31));
     assert(test1(2001, 11, 30));
     assert(test1(2001, 12, 31));
+  }
 
+  {
     assert(test1(2004,  1, 31));
     assert(test1(2004,  2, 29));
     assert(test1(2004,  3, 31));
@@ -141,7 +146,9 @@ int main(int argc, char ** argv)
     assert(test2( 10, false, 'K'));
     assert(test2( 11, false, 'L'));
     assert(test2( 12, false, 'M'));
+  }
 
+  {
     assert(test2(-12,  true, 'y'));
     assert(test2(-11,  true, 'x'));
     assert(test2(-10,  true, 'w'));
@@ -168,6 +175,21 @@ int main(int argc, char ** argv)
     assert(test2( 10,  true, 'k'));
     assert(test2( 11,  true, 'l'));
     assert(test2( 12,  true, 'm'));
+  }
+
+  {
+    assert(test3(2022,  5,  4, 19,  3,  -7, true,  2022,  5,  4, 13,  3));
+  }
+
+  {
+    assert(test3(2000,  1,  1,  0, 6,  -1, false, 1999, 12, 31, 23, 5));
+    assert(test3(1999, 12, 31, 23, 5,   1, false, 2000,  1,  1,  0, 6));
+    assert(test3(2004,  2, 28, 23, 6,   1, false, 2004,  2, 29,  0, 7));
+    assert(test3(2004,  2, 29,  0, 7,  -1, false, 2004,  2, 28, 23, 6));
+    assert(test3(2000,  2, 28, 23, 1,   1, false, 2000,  3,  1,  0, 2));
+    assert(test3(2000,  3,  1,  0, 2,  -1, false, 2000,  2, 28, 23, 1));
+    assert(test3(2001,  2, 28, 23, 3,   1, false, 2001,  3,  1,  0, 4));
+    assert(test3(2001,  3,  1,  0, 4,  -1, false, 2001,  2, 28, 23, 3));
   }
 
   return 0;
