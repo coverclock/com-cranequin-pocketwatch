@@ -37,7 +37,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define POCKETWATCH (!0)
+#define POCKETWATCH
+#define VERBOSE
+#define CONTINUOUS
 
 // include the library code:
 #include <LiquidCrystal.h>
@@ -71,7 +73,6 @@ unsigned long lastSyncMillis = 0;
 volatile unsigned int interruptCnt = 0;
 unsigned int lastinterruptCnt = 0;
 
-
 boolean receiving = false;        // variable to determine if we are in receiving mode
 boolean trigger = true;           // variable to trigger the reception
 boolean continous = false;        // variable to tell the system to continously receive atomic time, if not it will happen every night at midnight
@@ -83,6 +84,13 @@ ES100DateTime d;
 ES100Status0  status0;
 ES100NextDst  nextDst;
 
+#ifdef POCKETWATCH
+Localtime l;
+int8_t offset = -7; /* MST */
+boolean dstinuse = true;
+boolean dstineffect = false;
+#endif
+
 void atomic() {
   // Called procedure when we receive an interrupt from the ES100
   // Got a interrupt and store the currect millis for future use if we have a valid decode
@@ -91,9 +99,53 @@ void atomic() {
 }
 
 char * getISODateStr() {
+#ifdef POCKETWATCH
+  static char result[21];
+  boolean dst = dstinuse && dstineffect;
+  char zone = Localtime::getTimeZone(offset, dst);
+#else
   static char result[19];
+#endif
 
   t=rtc.getTime();
+
+#ifdef POCKETWATCH
+  Serial.println(offset, DEC);
+  Serial.println(dst, DEC);
+  l.hour = t.hour;
+  l.mon = t.mon;
+  l.date = t.date;
+  l.year = t.year;
+  l.dow = t.dow;
+#ifdef VERBOSE
+  Serial.print(l.year, DEC);
+  Serial.print('-');
+  Serial.print(l.mon, DEC);
+  Serial.print('-');
+  Serial.print(l.date, DEC);
+  Serial.print('T');
+  Serial.print(l.hour, DEC);
+  Serial.print('Z');
+  Serial.println(l.dow, DEC);
+#endif
+  l.toLocalTime(offset, dst);
+#ifdef VERBOSE
+  Serial.print(l.year, DEC);
+  Serial.print('-');
+  Serial.print(l.mon, DEC);
+  Serial.print('-');
+  Serial.print(l.date, DEC);
+  Serial.print('T');
+  Serial.print(l.hour, DEC);
+  Serial.print(zone);
+  Serial.println(l.dow, DEC);
+#endif
+  t.hour = l.hour;
+  t.mon = l.mon;
+  t.date = l.date;
+  t.year = l.year;
+  t.dow = l.dow;
+#endif
 
   result[0]=char((t.year / 1000)+48);
   result[1]=char(((t.year % 1000) / 100)+48);
@@ -131,7 +183,11 @@ char * getISODateStr() {
   else
     result[17]=char((t.sec / 10)+48);
   result[18]=char((t.sec % 10)+48);
+#ifdef POCKETWATCH
+  result[19] = zone;
+#else
   result[19]=90;
+#endif
   result[20]=0;
 
   return result;
@@ -142,12 +198,18 @@ void displayDST() {
   switch (status0.dstState) {
     case B00:
       lcd.print("is Not In Effect");
+#ifdef POCKETWATCH
+      dstineffect = false;
+#endif
       break;
     case B10:
       lcd.print("Begins Today");
       break;
     case B11:
       lcd.print("is In Effect");
+#ifdef POCKETWATCH
+      dstineffect = true;
+#endif
       break;
     case B01:
       lcd.print("Ends Today");
@@ -368,12 +430,14 @@ void setup() {
   lcd.begin(20, 4);
   lcd.clear();
   rtc.begin();
-  
-  attachInterrupt(digitalPinToInterrupt(es100Int), atomic, FALLING);
 
-#if defined(POCKETWATCH)
+#ifdef POCKETWATCH
+#ifdef CONTINUOUS
   continous = true;
 #endif
+#endif
+
+  attachInterrupt(digitalPinToInterrupt(es100Int), atomic, FALLING);
 }
 
 void loop() {
@@ -442,9 +506,15 @@ void loop() {
   if (lastMillis + 100 < millis()) {
     showlcd();
 
+#ifdef POCKETWATCH
+    // Set trigger to start reception at 3AM local time if we are not in continuous mode
+    // (typical of commercial WWVB-disciplined clocks).
+    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 + offset) % 24)) && (t.min == 0)); 
+#else
     // set the trigger to start reception at midnight (UTC-4) if we are not in continous mode.
     // 4am UTC is midnight for me, adjust to your need
     trigger = (!continous && !receiving && t.hour == 4 && t.min == 0); 
+#endif
     
     lastMillis = millis();
   }

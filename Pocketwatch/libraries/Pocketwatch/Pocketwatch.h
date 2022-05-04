@@ -96,8 +96,8 @@ public:
   /*
    * Given a signed time zone offset in hours, return a time zone name using
    * the single letter NATO nomenclature, where 'Z' for Zulu is UTC which has
-   * an offset of zero. If Daylight Saving Time is enabled for this time zone,
-   * convert the time zone name to lower case to make it obvious.
+   * an offset of zero. If Daylight Saving Time is enabled and active for this
+   * time zone, convert the time zone name to lower case to indicate it.
    */
   static char getTimeZone(int8_t offset, bool dst);
 
