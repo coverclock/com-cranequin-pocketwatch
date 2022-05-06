@@ -16,9 +16,12 @@ CXX	:= g++
 PROJECT	:= Pocketwatch
 PROGRAM	:= $(shell echo $(PROJECT) | tr '[A-Z]' '[a-z]')
 
-.PHONY:	all
+.PHONY:	all clean
 
 all:	$(PROGRAM)
+
+clean:
+	rm -f $(PROGRAM)
 
 $(PROGRAM):	$(PROJECT).cpp ../libraries/$(PROJECT)/$(PROJECT).h ../libraries/$(PROJECT)/$(PROJECT).cpp
 	$(CXX) -o $@ $<

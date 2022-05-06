@@ -190,5 +190,7 @@ int main(int argc, char ** argv)
     assert(test3(2022,  5,  4, 13, 3,   7, true,  2022,  5,  4, 21, 3)); /* Backward hours. */
   }
 
+  fputs("SUCCESS\n", stderr);
+
   return 0;
 }
