@@ -37,9 +37,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * POCKETWATCH Changes
+ * <https://github.com/coverclock/com-cranequin-pocketwatch>
+ * <http://cranequin.com>
+ * <mailto:jsloan@diag.com>
+ */
 #define POCKETWATCH
 //#define VERBOSE
 //#define CONTINUOUS
+#define OFFSET 0
+#define DST false
 
 // include the library code:
 #include <LiquidCrystal.h>
@@ -89,12 +97,14 @@ ES100NextDst  nextDst;
 
 #ifdef POCKETWATCH
 Localtime l;
-int8_t zoneOffset = -7; /* MST */
-boolean dstInUse = true; /* MDT */
+int8_t zoneOffset = OFFSET;
+boolean dstInUse = DST;
 boolean dstInEffect = false; /* Unknown until we get disciplined to WWVB. */
-Debouncer s1(!0);
-Debouncer s2(!0);
-Debouncer s3(!0);
+unsigned long nextMillis = 0;
+unsigned long currMillis = 0;
+Debouncer s1(!0); /* Active low. */
+Debouncer s2(!0); /* Active low. */
+Debouncer s3(!0); /* Active low. */
 #endif
 
 void atomic() {
@@ -108,7 +118,7 @@ char * getISODateStr() {
 #ifdef POCKETWATCH
   static char result[21];
   boolean dst = dstInUse && dstInEffect;
-  char zone = Localtime::getTimeZone(zoneOffset, dst);
+  char zone = Localtime::getTimeZone(zoneOffset, false);
 #else
   static char result[19];
 #endif
@@ -171,11 +181,6 @@ char * getISODateStr() {
   result[9]=char((t.date % 10)+48);
   
   result[10]=84;
-#ifdef POCKETWATCH
-  if (dstInUse) {
-    result[10] += ' ';
-  }
-#endif
 
   if (t.hour<10)
     result[11]=48;
@@ -208,18 +213,30 @@ void displayDST() {
   lcd.print("DST ");
   switch (status0.dstState) {
     case B00:
-      lcd.print("is Not In Effect");
 #ifdef POCKETWATCH
       dstInEffect = false;
+      if (dstInUse) {
+        lcd.print("is Not In Effect");
+      } else {
+        lcd.print("is Not In Use");
+      }
+#else
+      lcd.print("is Not In Effect");
 #endif
       break;
     case B10:
       lcd.print("Begins Today");
       break;
     case B11:
-      lcd.print("is In Effect");
 #ifdef POCKETWATCH
       dstInEffect = true;
+      if (dstInUse) {
+        lcd.print("is In Use");
+      } else {
+        lcd.print("is In Effect");       
+      }
+#else
+      lcd.print("is In Effect");
 #endif
       break;
     case B01:
@@ -518,7 +535,8 @@ void loop() {
   }
 
 #ifdef POCKETWATCH
-    if ((lastMillis + 10) < millis()) {
+    currMillis = millis();
+    if (currMillis >= nextMillis) {
       s1.debounce(digitalRead(S1));
       if (s1.edge() == Debouncer::IS_RISING) {
         Serial.println("S1");
@@ -534,6 +552,7 @@ void loop() {
         Serial.println("S3");
         zoneOffset -= 1;
       }
+      nextMillis = currMillis + 10;
     }
 #endif
  
