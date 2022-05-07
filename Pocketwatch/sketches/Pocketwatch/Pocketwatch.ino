@@ -562,7 +562,7 @@ void loop() {
 #ifdef POCKETWATCH
     // Set trigger to start reception at 3AM local time if we are not in continuous mode
     // (typical of commercial WWVB-disciplined clocks I have used).
-    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 + (zoneOffset % 13)) % 24)) && (t.min == 0)); 
+    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 - (zoneOffset % 13)) % 24)) && (t.min == 0)); 
 #else
     // set the trigger to start reception at midnight (UTC-4) if we are not in continous mode.
     // 4am UTC is midnight for me, adjust to your need
