@@ -17,11 +17,18 @@ whether DST is in effect or not. The time zone and the use of DST
 will have to be readminstered every time the clock powers up and
 returns back to the defaults of UTC and no DST.
 
-My changes are limited to modifications to the orginal Arduino
+My changes are limited to modifications to the original Arduino
 sketch, and the addition of the Pocketwatch Arduino library. The
 DS3231 (for the real-time clock) and ES100 (for the radio receiver)
 Arduino libraries are provided unchanged from what I downloaded
 from the Universal Solder web site.
+
+If you look at the Arduino sketch that runs in the AVR microcontroller,
+and peruse my changes, you will see that you can make the default
+time zone, and the default DST enable/disable state, anything you want.
+So you can set it to your own time zone and DST usage so that it
+powers up in the correct state. (I left mine set to UTC and no DST, because
+I like having an excuse to play with the buttons.)
 
 Included in this repository is a unit test program that can test
 portions of the Pocketwatch library without any hardware. It should
