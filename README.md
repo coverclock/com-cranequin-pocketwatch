@@ -22,6 +22,11 @@ sketch, and the addition of the Pocketwatch Arduino library. The
 DS3231 (for the real-time clock) and ES100 (for the radio receiver)
 Arduino libraries are provided unchanged from what I downloaded
 from the Universal Solder web site.
+
+Included in this repository is a unit test program that can test
+portions of the Pocketwatch library without any hardware. It should
+work on virtually any Linux system. I also used it on my desktop Mac.
+It might even work on Windows in a variety of UNIX-like environments.
 # Installation
 * Connect 5V power to your assembled ES100-MOD ADK board.
 * Connect a 5V (IMPORTANT NOT 3.3V) FTDI USB-to-TTL serial adapter (or similar) to the TX and RX pins (you will probably need to reverse RX and TX) and a GND pin (I used the one on the ICSP header). If your cable has a DTR output wire (mine doesn't), connect that to the RESET pin on the board.
