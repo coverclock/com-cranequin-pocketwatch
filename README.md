@@ -15,7 +15,8 @@ The local time will not be adjusted for DST until the clock receives
 a valid decode of the WWVB signal, which contains a flag indicating
 whether DST is in effect or not. The time zone and the use of DST
 will have to be readminstered every time the clock powers up and
-returns back to the defaults of UTC and no DST.    
+returns back to the defaults of UTC and no DST.
+
 My changes are limited to modifications to the orginal Arduino
 sketch, and the addition of the Pocketwatch Arduino library. The
 DS3231 (for the real-time clock) and ES100 (for the radio receiver)
