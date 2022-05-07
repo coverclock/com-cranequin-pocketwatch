@@ -17,7 +17,7 @@ whether DST is in effect or not. The time zone and the use of DST
 will have to be readminstered every time the clock powers up and
 returns back to the defaults of UTC and no DST.
 
-My changes are limited to modifications to the orginal Arduino
+My changes are limited to modifications to the original Arduino
 sketch, and the addition of the Pocketwatch Arduino library. The
 DS3231 (for the real-time clock) and ES100 (for the radio receiver)
 Arduino libraries are provided unchanged from what I downloaded
