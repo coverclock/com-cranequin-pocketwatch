@@ -27,7 +27,8 @@ If you look at the Arduino sketch that runs in the AVR microcontroller,
 and peruse my changes, you will see that you can make the default
 time zone, and the default DST enable/disable state, anything you want.
 So you can set it to your own time zone and DST usage so that it
-powers up in the correct state. (I left mine set to UTC and no DST.)
+powers up in the correct state. (I left mine set to UTC and no DST, because
+I like having an excuse to play with the buttons.)
 
 Included in this repository is a unit test program that can test
 portions of the Pocketwatch library without any hardware. It should
