@@ -38,16 +38,24 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
- * POCKETWATCH Changes
- * <https://github.com/coverclock/com-cranequin-pocketwatch>
- * <http://cranequin.com>
- * <mailto:jsloan@diag.com>
+ * POCKETWATCH
+ * Repository: <https://github.com/coverclock/com-cranequin-pocketwatch>
+ * Web Site: <http://cranequin.com>
+ * Author: <mailto:jsloan@diag.com>
+ * Configuration:
+ * POCKETWATCH - define to enable Pockwatch changes.
+ * VERBOSE - define to enable verbose serial output.
+ * CONTINUOUS - define to resynchronize continuously.
+ * OFFSET - define to be your desired time zone offset (e.g. -7 is MST).
+ * DST - define to be your desired DST usage (e.g. true is MDT).
+ * RESYNCHRONIZE - define to be your desired local resychronization time (e.g. 3AM).
  */
 #define POCKETWATCH
 //#define VERBOSE
 //#define CONTINUOUS
-#define OFFSET 0
-#define DST false
+#define OFFSET (-7)
+#define DST (true)
+#define RESYNCHRONIZE (3)
 
 // include the library code:
 #include <LiquidCrystal.h>
@@ -562,7 +570,7 @@ void loop() {
 #ifdef POCKETWATCH
     // Set trigger to start reception at 3AM local time if we are not in continuous mode
     // (typical of commercial WWVB-disciplined clocks I have used).
-    trigger = ((!continous) && (!receiving) && (t.hour == ((24 + 3 - (zoneOffset % 13)) % 24)) && (t.min == 0)); 
+    trigger = (!continous) && (!receiving) && (t.hour == ((24 + RESYNCHRONIZE - ((zoneOffset + ((dstInUse && dstInEffect) ? 1 : 0)) % 13)) % 24)) && (t.min == 0); 
 #else
     // set the trigger to start reception at midnight (UTC-4) if we are not in continous mode.
     // 4am UTC is midnight for me, adjust to your need
