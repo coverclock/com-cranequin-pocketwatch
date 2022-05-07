@@ -1,11 +1,36 @@
 # com-cranequin-pocketwatch
 Modifications to the Universal Solder EverSet ES100-MOD Application Development Kit
+# License
+This repository contains source files from various developers and
+organizations, and which are licensed under a variety of terms.
+The murkiness of the licensing is why this project was done under
+the auspices of Cranequin LLC instead of Digital Aggregates
+Corporation.
 # Abstract
-This repository contains source code from the Universal Solder web site with changes I made so that the time zone can
-be adjusted forwards and backwards using the S1 and S3 buttons, and to enable or disable the use of Daylight Saving Time (DST)
-using the S2 button. The local time will not be adjusted for DST until the clock receives a valid decode of the WWVB signal,
-which contains a flag indicating whether DST is in effect or not. The time zone and the use of DST will have to be readminstered
-every time the clock powers up and returns back to the defaults of UTC and no DST.
+This repository contains source code from the Universal Solder web
+site with changes I made so that the time zone can be adjusted
+forwards and backwards using the S1 and S3 buttons, and to enable
+or disable the use of Daylight Saving Time (DST) using the S2 button.
+The local time will not be adjusted for DST until the clock receives
+a valid decode of the WWVB signal, which contains a flag indicating
+whether DST is in effect or not. The time zone and the use of DST
+will have to be readminstered every time the clock powers up and
+returns back to the defaults of UTC and no DST.    
+My changes are limited to modifications to the orginal Arduino
+sketch, and the addition of the Pocketwatch Arduino library. The
+DS3231 (for the real-time clock) and ES100 (for the radio receiver)
+Arduino libraries are provided unchanged from what I downloaded
+from the Universal Solder web site.
+# Installation
+* Connect 5V power to your assembled ES100-MOD ADK board.
+* Connect a 5V (IMPORTANT NOT 3.3V) FTDI USB-to-TTL serial adapter (or similar) to the TX and RX pins (you will probably need to reverse RX and TX) and a GND pin (I used the one on the ICSP header). If your cable has a DTR output wire (mine doesn't), connect that to the RESET pin on the board.
+* Bring up the Arduino IDE.
+* In the Tools->Board dialog select "Arduino Uno".
+* In the Tools->Port dialog select the serial port representing the enumerated FTDI USB-to-TTL serial adapter.
+* Use the Sketch->Include Library->Add .ZIP Library dialog to import the directories of the DS3231, ES100, and Pocketwatch Arduino libraries under the ```libraries``` directory.
+* Use the File->Open... dialog to open the Pocketwatch.ino Arduino sketch in the ```sketches``` directory.
+* Compile the new libraries and sketch using the Check button.
+* Providing that works, use the Right Arrow button to upload the resulting binary image to your ES100-MOD ADK board. If your cable doesn't have a DTR output wire (which the IDE uses to reset the board at just the right time), you will need to press and release the Reset button on the board at just the right time: not too soon (or the bootloader on the board will have already given up) and not too late (or the uploader in the IDE will have already given up); it might take some practice.
 # Contact
 John Sloan    
 Cranequin LLC   
