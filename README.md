@@ -32,7 +32,7 @@ from the Universal Solder web site.
 * Use the File->Open... dialog to open the Pocketwatch.ino Arduino sketch in the ```sketches``` directory.
 * Compile the new libraries and sketch using the Check button.
 * Providing that works, use the Right Arrow button to upload the resulting binary image to your ES100-MOD ADK board. If your cable doesn't have a DTR output wire (which the IDE uses to reset the board at just the right time), you will need to press and release the Reset button on the board at just the right time: not too soon (or the bootloader on the board will have already given up) and not too late (or the uploader in the IDE will have already given up); it might take some practice.
-* That's it. The board comes up in almost no time at all after uploading or subsequent power up. Use the S1 and S3 buttons to non-persistently set your local time zone (which is indicated using the NATO nomenclature, e.g. Z or "Zulu" for UTC, T or "Tango" for my own MST), and the S2 button to enable (or disable) the use of Daylight Saving Time (DST) if your state uses it (not all do).
+* That's it. The board comes up in almost no time at all after uploading or subsequent power up. Use the S1 and S3 buttons to non-persistently set your local time zone (which is indicated using the NATO nomenclature, e.g. Z or "Zulu" for UTC, T or "Tango" for my own MST), and the S2 button to non-persistently enable (or disable) the use of Daylight Saving Time (DST) if your state uses it (not all do).
 # Contact
 John Sloan    
 Cranequin LLC   
