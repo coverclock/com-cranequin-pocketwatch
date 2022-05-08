@@ -4,8 +4,9 @@ Modifications to the Universal Solder EverSet ES100-MOD Application Development 
 This repository contains source files from various developers and
 organizations, and which are licensed under a variety of terms.
 The murkiness of the licensing is why this project was done under
-the auspices of Cranequin LLC instead of Digital Aggregates
-Corporation.
+the auspices of Cranequin LLC (my closed source company) instead
+of Digital Aggregates Corporation (my open source and consulting
+company).
 # Abstract
 This repository contains source code from the Universal Solder web
 site with changes I made so that the time zone can be adjusted
@@ -30,9 +31,9 @@ So you can set it to your own time zone and DST usage so that it
 powers up in the correct state. (I left mine set to UTC and no DST, because
 I like having an excuse to play with the buttons.)
 
-Included in this repository is a unit test program that can test
+Included in this repository is are unit tests that can test
 portions of the Pocketwatch library without any hardware. It should
-work on virtually any Linux system. I also used it on my desktop Mac.
+work on virtually any Linux system. I used it on my desktop Mac.
 It might even work on Windows in a variety of UNIX-like environments.
 # Installation
 * Connect 5V power to your assembled ES100-MOD ADK board.
