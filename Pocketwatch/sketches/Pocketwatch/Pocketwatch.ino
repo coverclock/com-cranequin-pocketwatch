@@ -47,15 +47,13 @@ POSSIBILITY OF SUCH DAMAGE.
  * VERBOSE - define to enable verbose serial output.
  * CONTINUOUS - define to resynchronize continuously.
  * OFFSET - define to be your desired time zone offset (e.g. -7 is MST).
- * DST - define to be your desired DST usage (e.g. true is MDT).
- * RESYNCHRONIZE - define to be your desired local resychronization time (e.g. 3AM).
+ * DST - define to be your desired DST usage (e.g. true for MDT).
  */
 #define POCKETWATCH
 //#define VERBOSE
 //#define CONTINUOUS
 #define OFFSET (-7)
 #define DST (true)
-#define RESYNCHRONIZE (3)
 
 // include the library code:
 #include <LiquidCrystal.h>
@@ -568,9 +566,10 @@ void loop() {
     showlcd();
 
 #ifdef POCKETWATCH
-    // Set trigger to start reception at 3AM local time if we are not in continuous mode
-    // (typical of commercial WWVB-disciplined clocks I have used).
-    trigger = (!continous) && (!receiving) && (t.hour == ((24 + RESYNCHRONIZE - ((zoneOffset + ((dstInUse && dstInEffect) ? 1 : 0)) % 13)) % 24)) && (t.min == 0); 
+    // Set trigger to start reception at 2AM local time if we are not in continuous mode
+    // (when DST is taken into and out of effect). Note that at this point, the Time
+    // object has local time in it, not UTC.
+    trigger = (!continous) && (!receiving) && (t.hour == 2) && (t.min == 0); 
 #else
     // set the trigger to start reception at midnight (UTC-4) if we are not in continous mode.
     // 4am UTC is midnight for me, adjust to your need
