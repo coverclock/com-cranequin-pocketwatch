@@ -28,7 +28,10 @@ If you look at the Arduino sketch that runs in the AVR microcontroller,
 and peruse my changes, you will see that you can make the default
 time zone, and the default DST enable/disable state, anything you want.
 So you can set it to your own time zone and DST usage so that it
-powers up in the correct state.
+powers up in the correct state. (It has to successfully decode a WWVB
+packet off the air, however, for it to realize whether DST is in effect
+or not, so it can take a few minutes after power up to display the
+correct time when DST is in effect in the summer.)
 
 Included in this repository is are unit tests that can test
 portions of the Pocketwatch library without any hardware. It should
