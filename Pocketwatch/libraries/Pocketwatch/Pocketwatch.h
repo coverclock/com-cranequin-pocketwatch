@@ -76,6 +76,11 @@ public:
  * Define a mechanism to adjust a time in UTC to a local time given a
  * signed integer hour time zone offset in the range -12..12. This algorithm
  * does not support half-hour offsets (which exist).
+ *
+ * REFERENCES
+ *
+ * Wikipedia, "Leap year", 2022-05-07,
+ * <https://en.wikipedia.org/wiki/Leap_year>
  */
 class Localtime {
 
@@ -93,13 +98,19 @@ public:
   Localtime();
 
   /*
-   * Given a Pocketwatch object, return the number of days in the month
+   * Given a Localtime object, return true if it represents a leap
+   * year, false otherwise.
+   */
+  bool isLeapYear() const;
+
+  /*
+   * Given a Localtime object, return the number of days in the month
    * for that year.
    */
   int8_t getDays() const;
 
   /*
-   * Given a Pocketwatch object in UTC, a signed time zone offset in hours,
+   * Given a Localtime object in UTC, a signed time zone offset in hours,
    * and a flag indicating whether Daylight Saving Time is active, return the
    * object adjusted to the local time.
    */

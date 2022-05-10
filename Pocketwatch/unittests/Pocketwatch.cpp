@@ -19,6 +19,15 @@
 #include "../libraries/Pocketwatch/Pocketwatch.h"
 #include "../libraries/Pocketwatch/Pocketwatch.cpp"
 
+static int test0(int16_t y0, bool b1)
+{
+  Localtime ll;
+
+  ll.year = y0;
+
+  return (ll.isLeapYear() == b1);
+}
+
 static int test1(int16_t y0, int8_t m0, int8_t n1)
 {
   Localtime ll;
@@ -75,8 +84,21 @@ static int test3(int16_t y0, int8_t m0, int8_t d0, int8_t h0, int8_t w0, int8_t 
 int main(int argc, char ** argv)
 {
   {
+    assert(test0(1600, true));
+    assert(test0(1700, false));
+    assert(test0(1800, false));
+    assert(test0(1900, false));
+    assert(test0(2000, true));
+    assert(test0(2020, true));
+    assert(test0(2021, false));
+    assert(test0(2022, false));
+    assert(test0(2023, false));
+    assert(test0(2024, true));
+    assert(test0(2025, false));
+  }
+  {
     assert(test1(2000,  1, 31));
-    assert(test1(2000,  2, 28));
+    assert(test1(2000,  2, 29));
     assert(test1(2000,  3, 31));
     assert(test1(2000,  4, 30));
     assert(test1(2000,  5, 31));
@@ -117,6 +139,21 @@ int main(int argc, char ** argv)
     assert(test1(2004, 10, 31));
     assert(test1(2004, 11, 30));
     assert(test1(2004, 12, 31));
+  }
+
+  {
+    assert(test1(2005,  1, 31));
+    assert(test1(2005,  2, 28));
+    assert(test1(2005,  3, 31));
+    assert(test1(2005,  4, 30));
+    assert(test1(2005,  5, 31));
+    assert(test1(2005,  6, 30));
+    assert(test1(2005,  7, 31));
+    assert(test1(2005,  8, 31));
+    assert(test1(2005,  9, 30));
+    assert(test1(2005, 10, 31));
+    assert(test1(2005, 11, 30));
+    assert(test1(2005, 12, 31));
   }
 
   {
@@ -180,8 +217,8 @@ int main(int argc, char ** argv)
   {
     assert(test3(1999, 12, 31, 23, 5,   1, false, 2000,  1,  1,  0, 6)); /* Forward a year. */
     assert(test3(2000,  1,  1,  0, 6,  -1, false, 1999, 12, 31, 23, 5)); /* Backward a year. */
-    assert(test3(2000,  2, 28, 23, 1,   1, false, 2000,  3,  1,  0, 2)); /* Forward a month. */
-    assert(test3(2000,  3,  1,  0, 2,  -1, false, 2000,  2, 28, 23, 1)); /* Backward a month. */
+    assert(test3(2000,  2, 29, 23, 1,   1, false, 2000,  3,  1,  0, 2)); /* Forward a leap month. */
+    assert(test3(2000,  3,  1,  0, 2,  -1, false, 2000,  2, 29, 23, 1)); /* Backward a leap month. */
     assert(test3(2001,  2, 28, 23, 3,   1, false, 2001,  3,  1,  0, 4)); /* Forward a month. */
     assert(test3(2001,  3,  1,  0, 4,  -1, false, 2001,  2, 28, 23, 3)); /* Backward a month. */
     assert(test3(2004,  2, 28, 23, 6,   1, false, 2004,  2, 29,  0, 7)); /* Forward a leap month. */

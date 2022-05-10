@@ -65,6 +65,11 @@ Localtime::Localtime()
   this->dow = 4;
 }
 
+bool Localtime::isLeapYear() const
+{
+  return (((this->year % 4) == 0) && (((this->year % 100) != 0) || ((this->year % 400) == 0)));
+}
+
 int8_t Localtime::getDays() const
 {
   static const uint8_t DAYS[] = {
@@ -75,7 +80,7 @@ int8_t Localtime::getDays() const
   int8_t days;
 
   days = DAYS[(this->mon - 1) % 12];
-  if ((this->mon == 2) && ((this->year % 4) == 0) && ((this->year % 400) != 0)) {
+  if ((this->mon == 2) && isLeapYear()) {
     days += 1;
   }
 
