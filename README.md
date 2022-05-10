@@ -6,7 +6,9 @@ organizations, and which are licensed under a variety of terms.
 The murkiness of the licensing is why this project was done under
 the auspices of Cranequin LLC (my closed source company) instead
 of Digital Aggregates Corporation (my open source and consulting
-company).
+company). The source code for my Pocketwatch library and for the
+Pocketwatch unit tests, which are purely original works, are
+licensed under the GNU LGPL 2.1.
 # Abstract
 This repository contains source code from the Universal Solder web
 site with changes I made so that the time zone can be adjusted
