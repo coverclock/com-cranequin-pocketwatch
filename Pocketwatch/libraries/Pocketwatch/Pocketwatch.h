@@ -24,19 +24,21 @@
  * REFERENCES
  *
  * Jack Gannsle, "A Guide to Debouncing, or How To Debounce a Contact in Two
- * Easy Pages", 2008-06, http://www.ganssle.com/debouncing.htm
+ * Easy Pages", 2008-06,
+ * <http://www.ganssle.com/debouncing.htm>
  *
  * Jack Gannsle, "A Guide to Debouncing - Part 2, or How To Debounce a Contact
- * in Two Easy Pages", 2008-06, http://www.ganssle.com/debouncing-pt2.htm
+ * in Two Easy Pages", 2008-06,
+ * <http://www.ganssle.com/debouncing-pt2.htm>
  *
  * Jack Ganssle, "My Favorite Software Debouncers", 2004-06-16,
- * http://www.embedded.com/electronics-blogs/break-points/4024981/My-favorite-software-debouncers
+ * <http://www.embedded.com/electronics-blogs/break-points/4024981/My-favorite-software-debouncers>
  *
  * Dr. Marty, "The Best Switch Debounce Routine Ever", 2009-05-20,
- * http://drmarty.blogspot.com/2009/05/best-switch-debounce-routine-ever.html
+ * <http://drmarty.blogspot.com/2009/05/best-switch-debounce-routine-ever.html>
  *
  * Jack Ganssle, "A Guide to Debouncing", 2008-06,
- * http://www.eng.utah.edu/~cs5780/debouncing.pdf
+ * <http://www.eng.utah.edu/~cs5780/debouncing.pdf>
  */
 class Debouncer {
 
