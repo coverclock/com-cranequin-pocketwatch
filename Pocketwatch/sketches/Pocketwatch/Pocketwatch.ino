@@ -221,31 +221,25 @@ void displayDST() {
     case B00:
 #ifdef POCKETWATCH
       dstInEffect = false;
-      if (dstInUse) {
-        lcd.print("is Not In Effect");
-      } else {
-        lcd.print("is Not In Use");
-      }
-#else
-      lcd.print("is Not In Effect");
 #endif
+      lcd.print("is Not In Effect");
       break;
     case B10:
+#ifdef POCKETWATCH
+      dstInEffect = true;
+#endif
       lcd.print("Begins Today");
       break;
     case B11:
 #ifdef POCKETWATCH
       dstInEffect = true;
-      if (dstInUse) {
-        lcd.print("is In Use");
-      } else {
-        lcd.print("is In Effect");       
-      }
-#else
-      lcd.print("is In Effect");
 #endif
+      lcd.print("is In Effect");
       break;
     case B01:
+#ifdef POCKETWATCH
+      dstInEffect = false;
+#endif
       lcd.print("Ends Today");
       break;
   }
